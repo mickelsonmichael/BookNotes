@@ -1,12 +1,12 @@
 # Chapter 1. Functional Concurrency Foundations
 
 This chapter covers
+
 * Why you need concurrency
 * Differences between concurrency, parallelism, and multithreading
 * Avoiding common pitfalls
 * Sharing variables between threads
 * Using the functional paradigm
-
 
 For a single CPU core, the limiting factor is not the speed of processing, but the heat.
 
@@ -15,13 +15,14 @@ A shorter circuit means a faster CPU; smaller is faster. We've nearly reached th
 To continue the increase in speed, we've begun using multiple processors working together. This requires the programmer to utilize the processors to their fullest. 
 
 ## 1.1. What you will learn from this book
+
 * How to combine asynchronous operations with the Task Parallel Library
 * Avoid common problems and troubleshoot multithreaded and asynchronous programs
 * Concurrent programming models to adopt functional paradigms
-    * Functional
-    * Asynchronous
-    * Event-Driven
-    * Message passing with agents and actors
+  * Functional
+  * Asynchronous
+  * Event-Driven
+  * Message passing with agents and actors
 * Building concurrent systems using the functional paradigm
 * Write asynchronous computations in a declarative style
 * Accelerate sequential programs by using data-parallel programming
@@ -64,14 +65,10 @@ Operations are considered *parallel* if the executions overlap in time.
 Parallel programming is a subset of concurrent programming. 
 >Concurrency refers to the design of the system, parallelism relates to the execution.
 
-
 #### Additional Research into the Difference between Parallelism and Concurrency
 
 >Concurrency and parallelism are related terms but not the same, and often misconceived as the similar terms. The crucial difference between concurrency and parallelism is that concurrency is about dealing with a lot of things at same time (gives the illusion of simultaneity) or handling concurrent events essentially hiding latency. On the contrary, parallelism is about doing a lot of things at the same time for increasing the speed.
->
 >Parallelly executing processes must be concurrent unless they are operated at the same instant but concurrently executing processes could never be parallel because these are not processed at the same instant.
-
-
 
 | Basis for Comparison | Concurrency | Parallelism |
 | -------- | -------- | -------- |
@@ -82,14 +79,11 @@ Parallel programming is a subset of concurrent programming.
 | Processing units | Probably single | Multiple |
 | Example | Running multiple applications at the same time | Running a web crawler on a cluster |
 
-> simultaneous: existing, occurring, or operating at the same time; concurrent: 
+> simultaneous: existing, occurring, or operating at the same time; concurrent:
 
-::: info
-Best example I can find: Concurrency is like eating and talking during a meal. You are doing two tasks at the same time, *eating* and *talking*, but you can only do one or the other. You can eat, then talk, then eat. This is concurrency. Parallelism would be when one individual is eating and the other is talking. Two operations at the same time.
-
+**Best example I can find: Concurrency is like eating and talking during a meal. You are doing two tasks at the same time, *eating* and *talking*, but you can only do one or the other. You can eat, then talk, then eat. This is concurrency. Parallelism would be when one individual is eating and the other is talking. Two operations at the same time.
 Parallelism is like singing and dancing. You can sing and dance at the same time at once.
-[:movie_camera: YouTube Video](https://www.youtube.com/watch?v=ltTQaMSk6ME)
-:::
+[:movie_camera: YouTube Video](https://www.youtube.com/watch?v=ltTQaMSk6ME)**
 
 ### 1.2.4. Multitasking performs multiple tasks concurrently over time
 
@@ -102,18 +96,19 @@ Parallelism is like singing and dancing. You can sing and dance at the same time
 Context switching is handled by the operating system. But in a single-core computer, the overhead from switching contexts may be more taxing than the time saved from switching.
 
 Two kinds of multitasking operating systems
+
 * *Cooperative multitasking systems*
-    * Scheduler lets each task run until finished *or* explicitly yields control back to scheduler
+  * Scheduler lets each task run until finished *or* explicitly yields control back to scheduler
 * *Preemptive multitasking systems*
-    * Windows and most operating systems
-    * Scheduler prioritizes the tasks
-    * System switches execution based on priority when the task time allocation is completed
+  * Windows and most operating systems
+  * Scheduler prioritizes the tasks
+  * System switches execution based on priority when the task time allocation is completed
 
 ### 1.2.5. Multithreading for performance improvement
 
 *Multithreading*: a form of concurrency that uses multiple threads of execution. Multithreading implies concurrency, but concurrency does not necessarily imply multithreading.
 
-## 1.3. Why the need for concurrency?
+## 1.3. Why the need for concurrency
 
 ### 1.3.1. Present and future of concurrent programming
 
@@ -125,7 +120,7 @@ Two kinds of multitasking operating systems
 
 ### 1.4.3. A simple real-world example: parallel quicksort
 
-### 1.4.4. Benchmarking in F#
+### 1.4.4. Benchmarking in F\#
 
 ## 1.5. Why choose functional programming for concurrency
 
