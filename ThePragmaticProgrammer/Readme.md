@@ -14,7 +14,7 @@ by David Thomas and Andrew Hunt
 
 | Week | Due Date | Chapter |
 | --- | -------- | ------|
-| 1 | Nov. 19 | 1 |
+| 1 | Nov. 19 | [1: A Pragmatic Philosophy](Chapter1.md) |
 | 2 | Nov. 26 | 2
 | 3 | Dec. 3 | 3 |
 | 4 | Dec. 10 | 4 |
