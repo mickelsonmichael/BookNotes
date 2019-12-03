@@ -5,7 +5,7 @@ The book stresses that this book is about *you*. It's your life so own it.
 
 ## 1: It's Your Life
 
-**:grey_exclamation: Tip 3 | You Have Agency**
+**:grey_exclamation: Tip 3: You Have Agency**
 
 You can be the agent of change in your own life. If you don't like something, then change it.
 
@@ -18,7 +18,7 @@ If you're falling behind tech, catch up. If you don't like your job, quit. You c
 You are accountable and your team needs to be able to trust you above all else. If you aren't reliable and don't claim responsibility, it will cause friction on the team.
 
 
-**:grey_exclamation: Tip 4 | Provide Options, Don't Make Lame Excuses**
+**:grey_exclamation: Tip 4: Provide Options, Don't Make Lame Excuses**
 
 Use the rubber duck technique to make sure whatever excuse you're about to give isn't a bad one. If you know the person is going to ask questions be prepared to answer them. Provide options and solutions to the problem. 
 
@@ -26,7 +26,7 @@ Use the rubber duck technique to make sure whatever excuse you're about to give 
 
 The book disregards the term "technical debt" since it implies that it will eventually be paid off; it's not going to be paid off. Instead they prefer the term "sotware rot". 
 
-**:grey_exclamation: Tip 5 | Don't Live with Broken Windows**
+**:grey_exclamation: Tip 5: Don't Live with Broken Windows**
 
 If a building has a broken window for a long period of time, it will lead to more vandalism and neglect until the building becomes derelict. A "broken window" can lead to faster decay. If you let one thing fall apart, the rest of the building (or application) will follow quickly.
 
@@ -34,7 +34,7 @@ Don't rush to solve a problem and leave more problems. There's always time to do
 
 ## 4. Stone Soup and Boiled Frogs
 
-**:grey_exclamation: Tip 6 | Be a Catalyst for Change**
+**:grey_exclamation: Tip 6: Be a Catalyst for Change**
 
 Don't ask for the farm all at once; work your way up progressively. Get a result with the minimum, then you can always ask for more once others are able to see the benefits.
 
@@ -50,7 +50,7 @@ Always think about what is going on around you. You aren't working in a vacuum s
 
 Make software that meets all the specifications and nothing more. Don't overly polish a product before you have consumer feedback. Be sure to discuss time frames realistically; it's OK to set later deadlines and deliver a better product.
 
-**:grey_exclamation: Tip 8 | Make Quality a Requirements Issue**
+**:grey_exclamation: Tip 8: Make Quality a Requirements Issue**
 
 Discuss the scope and quality of a system before you start working on it.
 
@@ -58,7 +58,7 @@ If you give your users something to work with early, they can guide later develo
 
 ## 6. Your Knowledge Portfolio
 
-**:grey_exclamation: Tip 9 | Invest Regularly in Your Knowledge Portfolio**
+**:grey_exclamation: Tip 9: Invest Regularly in Your Knowledge Portfolio**
 
 Your knowledge in this field slowly expires; new technology is released and your current knowledge becomes outdated. It's important to keep up with the latest and greatest, but to not invest too heavily on fads.
 
@@ -69,7 +69,7 @@ Your knowledge in this field slowly expires; new technology is released and your
 
 When you find a problem that you don't know the answer to, *dig into it*. Look up the answer. If you can't find it yourself seek help from someone who can.
 
-**:grey_exclamation: Tip 10 | Critically Analyze What You Read and Hear**
+**:grey_exclamation: Tip 10: Critically Analyze What You Read and Hear**
 
 Be aware of bias in articles and sources. Someone most likely paid to get that information to you. Think about the motivations behind it before blindly following what it says. 
 
@@ -85,7 +85,7 @@ Be aware of bias in articles and sources. Someone most likely paid to get that i
 
 ## 7. Communicate
 
-**:grey_exclamation: Tip 11 | English is Just Another Programming Language**
+**:grey_exclamation: Tip 11: English is Just Another Programming Language**
 
 You should strive to be an effective communicator. Honor the same principles you would follow in OOP (DRY, automation, etc.).
 
@@ -99,7 +99,7 @@ Take time to format your ideas in an appealing way. Use templates and graphics t
 
 Involve your audience in the draft process and in the pitch; listen to their concerns and respond.
 
-**:grey_exclamation: Tip 12 | It's Both What You Say and the Way You Say It**
+**:grey_exclamation: Tip 12: It's Both What You Say and the Way You Say It**
 
 If you are going to be late getting back to someone, **tell them**.
 
@@ -107,7 +107,7 @@ If you are going to be late getting back to someone, **tell them**.
 
 Keeping people informed makes them more forgiving of the occasional slip.
 
-**:grey_exclamation: Tip 13 | Build Documentation In, Don't Bolt It On**
+**:grey_exclamation: Tip 13: Build Documentation In, Don't Bolt It On**
 
 Documentation should be a part of your code. Your code should be well commented and descriptive. However, use comments within reason; not everything needs a comment. **Non-API commenting should discuss *why something is done*, its purpose, and its goal**. Not how something is done; the code already does that.
 
