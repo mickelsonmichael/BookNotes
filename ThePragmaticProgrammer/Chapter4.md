@@ -159,6 +159,127 @@ See [here](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.debug.
 
 [Code Contracts in .NET](https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts)
 
+Code contracts allow you to specify preconditions, postconditions, and object invariants in code.
+
+* Preconditions - requirements that must be met when entering a method or property
+* Postconditions - expectations at the time the moethod or property code exits
+* Object invariants - expected state for a class that is in a good state
+
+Code contracts have classes for marking code, a static analyzer for compile-time analysis, and a runtime analyzer.
+
+All .NET Framework languages can utilize code conditions without any additional installations. You can also download [Code Contracts for .NET Extension for VS](https://marketplace.visualstudio.com/items?itemName=RiSEResearchinSoftwareEngineering.CodeContractsforNET) to specify the level of anaylsis to perform. Analyzers confirm that contracts are well formed.
+
+Most contract methods are conditionally compiled. They are only compiled when you specify the `CONTRACTS_FULL` symbol using the [`#define` directive](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives/preprocessor-define). 
+
+### Preconditions
+
+Utilize the `Contract.Requires` method and specify the state when a method is invoked. Generally specify valid parameter rules. *Be sure that your preconditions have no side effects*; they should read, not write. You can throw a particular type of exception by specifying the generics for the `Requires` call like `Contract.Requires<ArgumentNullException>`.
+
+#### Legacy Requires Statements
+
+The contract tool can recognize bits of parameter checking code if they meet one of the following scenarios:
+
+* Statement appears first in a method (before any others)
+* The statement is followed by a `Contract` method call
+
+```c#
+if (x == null) throw new SomethingException();
+Contract.EndContractBlock(); // All previous "if" checks are preconditions
+```
+
+### Postconditions
+
+Determine the state of a method upon termination and is checked just before exit. Unlike preconditions, post conditions can check private or internal properties and variables.
+
+#### Standard Postconditions
+
+`Ensures` method expresses a condition that must be true upon normal termination of the method.
+
+```c#
+Contract.Ensures(this.Price > 0);
+```
+
+#### Exceptional Postconditions
+
+Conditions that should be `true` when an exception of type `T` is thrown by a method.
+
+```c#
+Contract.EnsuresOnThrow<T>(this.Price > 0);
+```
+
+You should utilize exceptional postconditions with specific exceptions that may be called when a member is called, not with other "impossible-to-control" exceptions like stack overflow or `Exception`.
+
+#### Special Postconditions
+
+The following methods may be used only within postconditions:
+
+* You can check the values in postconditions with `Contract.Result<T>()` where `T` is the return type of the method, but you must provide the type if the compiler is unable to infer it. `void` methods cannot utilize `Contract.Result<T>()` in their postconditions.
+* You can retrieve the original values of a condition using `Contract.OldValue<T>(e)` where `T` is the type of `e`; `T` can be omitted if the type can be inferred.
+  * An old expression cannot contain another old expression
+  * Must refer to a vlue that existed in the method's precondition
+  * Must be an expression that can be evaluated as long as the method's precondition is true
+  * To reference a field on an object, the preconditions must guarantee that the object is always non-null
+  * You cannot refer to the metho'd return value (`Contract.OldValue(Contract.Result<int>() + x) //Invalid`)
+  * Cannot refer to `out` parameters
+  * Cannot depend on the bound variable of a quantified if the range depends on the return value of the method
+  * Cannot refer to the parameter of the `ForAll` or `Exists` call unless it is used as an indexer or argument to a method call
+  * Cannot occur in anonymous method if the value depends on any parameters of the anonymous delegate (unless it is an argument for the `ForAll` or `Exists` methods)
+
+``` c#
+  Contract.ForAll(0, xs.Length, i => Contract.OldValue(xs[i]) > 3); // OK
+  Contract.ForAll(0, xs.Length, i => Contract.OldValue(i) > 3); // ERROR
+```
+
+* You can check the status of `out` parameters using the `Contract.ValueAtReturn` method, which may appear only in postconditions
+
+``` c#
+public void OutParam(out int x)
+{
+    Contract.Ensures(Contract.ValueAtReturn(out x) == 3);
+    x = 3;
+}
+```
+
+### Invariants
+
+> Object invariants are conditions that should be true for each instance of a class whenever that object is visible to a client. They express the conditions under which the object is considered to be correct.
+
+In order to define the invariants, you must create a method and decorate it with the `ContractInvariantMethodAttribute`, which contains a sequence of calls to the `Contract.Invariant` method.
+
+``` c#
+[ContractInvariantMethod]
+protected void ObjectInvariant ()
+{
+    Contract.Invariant(this.y >= 0);
+    Contract.Invariant(this.x > this.y);
+    ...
+}
+```
+
+Invariants are defined by the `CONCTRACTS_FULL` preprocessor symbol. They are checked at the end of each public method. If public methods are nested, then only the outermost invariants are checked. 
+
+### User Guidelines
+
+#### Contract Ordering
+
+The following table shows the order of elements you should use when you write method contracts.
+
+|1. | If-then-throw statements | Backward-compatible public preconditions |
+|2. | Requires | All public preconditions. |
+|3. | Ensures | All public (normal) postconditions. |
+|4. | EnsuresOnThrow | All public exceptional postconditions. |
+|5. | Ensures | All private/internal (normal) postconditions. |
+|6. | EnsuresOnThrow | All private/internal exceptional postconditions. |
+|7. | EndContractBlock | If using if-then-throw style preconditions without any other contracts, place a call to EndContractBlock to indicate that all previous if checks are preconditions. |
+
+#### Purity
+
+Methods within a contract must not modify any preexisting state - they must be *pure*. You can find a list of the code elements that are considered "pure" in the [original documentation](https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts#purity). You can also read about the [PureAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.contracts.pureattribute).
+
+#### Visibility
+
+Members mentioned in a contract must be at least as visible as the method they are in. A contract in a public method cannot require something from a private field. This would put an impossible burdon on the caller. You can except a property from these rules by using the [ContractPublicPropertyNameAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.contracts.contractpublicpropertynameattribute)
+
 ## Meeting Notes
 
 Many were confused about preconditions and postconditions and who is "responsible" for it. We've determined that in the languages they specify, the pre- and postconditions are not part of the usual method; they are considered separate and independant. You should be checking these *before* the method is actually called; the closest relative in C# seems to be attributes?
