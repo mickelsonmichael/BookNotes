@@ -149,3 +149,20 @@ Don't outrun your headlights in the sense of getting ahead of yourself while cod
 
 You can't predict the future; things out of your control may change significantly someday. The concept of a "black swan" means that the significant events in history are not the expected events; they're the unusual and unexpected.
 
+## Research: Assertions in C\#
+
+C# does have the ability to utilize assertions in ways like `Debug.Assert` and `Trace.Assert`.
+
+See [here](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.debug.assert?view=netframework-4.8) for the official documentation on using `Debug.Assert`.
+
+## Research: Contracts in C\#
+
+[Code Contracts in .NET](https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts)
+
+## Meeting Notes
+
+Many were confused about preconditions and postconditions and who is "responsible" for it. We've determined that in the languages they specify, the pre- and postconditions are not part of the usual method; they are considered separate and independant. You should be checking these *before* the method is actually called; the closest relative in C# seems to be attributes?
+
+Lots of discussion about whether or not to let the application just crash. As web developers, you would never want the user to see the actual error message itself; you almost always catch exceptions and return an error.
+
+Always fall back on allowing your code to be easily replacable. Lyn and Dan especially liked this. As times move ahead, it's best to make things swappable.

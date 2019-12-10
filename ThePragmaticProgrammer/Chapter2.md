@@ -46,9 +46,7 @@ One  of the hardest forms of duplication to prevent is duplication by multiple d
 
 The only way to mitigate this issue is by having good team communication with a local source of information. The authors recommend having "project librarian" who can facilitate the exchange of knowledge, or having a centralized repository where utilities can be placed.
 
-:::info
-**Tip 16 |** Make It Easy to Reuse
-:::
+**Tip 16:** Make It Easy to Reuse
 
 If a library or utility you write isn't easy to use, people won't use it.
 
@@ -60,9 +58,7 @@ As you move up on a graph, only the `y` value changes and not the `x`, meaning t
 
 By using orthogonality, you are able to eliminate the effects between unrelated things. A change in one area of your program will not affect another.
 
-::: info
 **Tip 17 |** Eliminate Effects Between Unrelated Things
-:::
 
 * It is easier to write smaller bits of code than one large block
 * It is easier to test orthogonal code
