@@ -1,5 +1,59 @@
 # Chapter 4. Pragmatic Paranoia
 
+**Tip 36:** You Can't Write Perfect Software
+
+As a programmer, you shouldn't trust anyone else's code. Always assume it will fail. And as I pragmatic programmer, you should never trust *yourself* either. Know that you don't write perfect code and that you are going to make mistakes; be ready for them. Build defenses against your mistakes.
+
+## 23. Design by Contract
+
+### DBC
+
+A piece of code should have a *contract* of sorts. It should do no more or no less than what it says it will do. It will also say what it expects to receive to perform that output. 
+
+* Preconditions
+  * Routine's requirements
+  * It is the caller's responsibility to pass good data
+* Postconditions
+  * Routine's guarantee
+  * Implies that it will conclude
+* Class invariants
+  * Something that must be true once the proces is *complete*
+  * Does not have to be true during the process
+
+> If all the routine's preconditions are met by the caller, the routine shall guarantee that all postconditions and invariants will be true when it completes.
+
+When the contract is breached, a solution needs to be had. Could be an exception or the program terminating. 
+
+**Tip 37:** Design with Contracts
+
+Write "azy" code. Accept little and give little. Only do what the contract states and nothing more.
+
+### Class Invariants and Functional Languages
+
+It's called "class" invariants because it was conceived in the Eiffel language; an object-oriented language. But really it applies to the *state* of things, which can apply to functional languages as well. You pass the state to a function and receive a state back.
+
+### Implementing DBC
+
+When possible, check the inputs of your function to ensure they meet your contract. If your language does not support DBC in code, you can put the contract as comments or in unit tests.
+
+#### Assertions
+
+Assertions are very helpful in at least partially checking these contracts. However, in most OOL there is no propogation of assertions via inheritance. If you override a class, its contract will have to be manually rewritten. There also may come environments where exceptions from assertions are turned off or ignored in the code.
+
+There is also no way to store the "old" values in most languages. You will need to manually save the values in order to check them.
+
+### DBC and Crashing Early
+
+Crash early at the site of the issue. The longer you delay the crash the harder it is to diagnose the cause of the issue and the slower your response time will be. By using preconditions you transfer the burden of responsibility for checking the parameters to the caller instead of the function. That way the function itself can feel safe in performing the actions it needs.
+
+### Semantic Invariants
+
+Use these flexible invariants for contracts that are core to the philosophy of the program. Things that most likely will not change with business rules. In the book, they use an example of debit card transactions and the invariant "Err in the favor of the consumer". A core policy that will most likely not undergo change with a change in management.
+
+## Dynamic Contracts and Agents
+
+You can renegotiate contracts freely. Processes should be able to negotiate contracts themselves ideally. This is some utopia chapter that I really don't think needed to be here...
+
 ## 24. Dead Programs Tell No Lies
 
 Each and every switch statement has a *default* for one reason: we want to know when the "impossible" happened.
