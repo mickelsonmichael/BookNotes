@@ -43,9 +43,9 @@ The function composition style native to F# allows the process to be read from l
 
 ## 2.2. Closures to simplify functional thinking
 
-*Closure* - first-class function with free variables taht are bound in the lexical environment
+*Closure* - first-class function with free variables that are bound in the lexical environment
 
-They are the more convenient way to give functions access to local state and pass data into background operations. They allow a function to acces one ore more non-local variables when invoked outside its immediate lexical scope.
+They are the more convenient way to give functions access to local state and pass data into background operations. They allow a function to access one ore more non-local variables when invoked outside its immediate lexical scope.
 
 *[Free variable](https://stackoverflow.com/a/21856306/3338349)* - a variable used in some function that its value depends on the context where the function is invoked, called or used. The function will need to be determined at runtime by stepping backwards up the call chain to find the sender.
 
@@ -64,11 +64,11 @@ var total = getTotal(10.00);
 
 Closures also allow variables to be maintained even when they would have normally gone out of scope; the variable is captured and not subject to garbage collection.
 
-You can consider the captured variables as snapshots of themselves. Snapshots taken at the time of evaluation and not at the time of capture. If you were to alter the variable outside of a closure before the closure had executed, the updated value would be read by the closure istead of the value at time of capture.
+You can consider the captured variables as snapshots of themselves. Snapshots taken at the time of evaluation and not at the time of capture. If you were to alter the variable outside of a closure before the closure had executed, the updated value would be read by the closure instead of the value at time of capture.
 
-### 2.2.2 Closures in a multithreading evironment
+### 2.2.2 Closures in a multithreading environment
 
-The issue of the value of a variable being updated before a closure is ran can be avoided by using the `Parallel.For` method from the Task Parallel Library. You could also capture a new unique teporary variable for each task, but this is not ideal.
+The issue of the value of a variable being updated before a closure is ran can be avoided by using the `Parallel.For` method from the Task Parallel Library. You could also capture a new unique temporary variable for each task, but this is not ideal.
 
 When F# runs a `for` loop, instead of updating the value of the index with each loop, instead a new immutable index is created for each loop. That means the issues that C# suffers from in terms of closures not having access to the loop is solved.
 
@@ -76,12 +76,12 @@ When F# runs a `for` loop, instead of updating the value of the index with each 
 
 *Memoization* - see also *tabling*. Caching the results of a function to avoid repeated calculations. It keeps the result in memory so it can be returned immediately in future calls.
 
-Memoization doesn't always result in performance increases. For instance, in the case of a Dictionary, the time it takes to calculate the hash for a string is proportional to the length. So it is your best interests to utilize a profiler and determine whether your scenario is deal for using memoization.
+Memoization doesn't always result in performance increases. For instance, in the case of a Dictionary, the time it takes to calculate the hash for a string is proportional to the length. So it is your best interests to utilize a profiler and determine whether your scenario is ideal for using memoization.
 
 ## 2.4 Memoization in action for a fast web crawler
 
 The book gives an example of a web crawler that takes a URL, finds the title and records it, then finds all links on the page and performs the same action again for the new URLs, recursively returning a list of titles.
 
-In this scenario, there will ineveitably be duplicate URLs and a lot of time would be wasted doing the same calculation repeatedly. Insated, memoization should be leveraged so that duplicate computations are avoided.
+In this scenario, there will inevitably be duplicate URLs and a lot of time would be wasted doing the same calculation repeatedly. Instead, memoization should be leveraged so that duplicate computations are avoided.
 
 You could also utilize the LINQ extension [AsParallel](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.asparallel?view=netframework-4.8) to automatically bind the query to PLINQ.
