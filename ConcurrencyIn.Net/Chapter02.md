@@ -141,7 +141,7 @@ F# will allow you to leverage currying and partial application of functions to c
 
 You can also utilize a method that returns the quickest of two potential calculations first.
 
-The book uses the example of a weather app. You could enter a search to retrieve the weather in a particular city, then request two different services make the computation. Whichever service returns first will be the winner and their result will be returned; the other computation will be cancelled. 
+The book uses the example of a weather app. You could enter a search to retrieve the weather in a particular city, then request two different services make the computation. Whichever service returns first will be the winner and their result will be returned; the other computation will be cancelled.
 
 ## 2.7 Being lazy is a good thing
 
@@ -188,3 +188,7 @@ You can use `Task` and `Lazy` together to improve your program even further, by 
 However, with an asynchronous lambda expression, it can be executed on any thread that calls `Value` and the expression will run within the context.
 
 You are better of wrapping the expression in a `Task`, which will force the asynchronous execution on a thread-pool thread.
+
+## Meeting Notes (12/12/2019)
+
+Finding that in chapter 2 he shows C# examples, then mentions the issues and moves on to F# examples. So we've been glancing past the F# examples since we aren't well versed with the language and staring isn't helping.
