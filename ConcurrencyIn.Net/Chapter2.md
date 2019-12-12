@@ -1,5 +1,19 @@
 # Chapter 2. Functional Programming Techniques for Concurrency
 
+## Summary
+
+* Function composition applies the result of one function to the input of another, creating a new function
+* Closure is an in-line delegate/anonymous method attached to it's parent method, where the variables defined in the parent's body can be referenced from within the anonymous method
+* Closure provides a convenient way to give a function access to local state, even outside of scope
+* Memoization is a technique that caches results instead of recomputing them.
+* Precomputation performs an initial computation that generates a series of results, usually in the form of a lookup table.
+  * This can be shared to reduce the number of unnecessary computations.
+  * Generally replaces memoization and is used in combination with partial applied functions
+* Lazy initialization is another variation of caching
+  * Defers the computation of a factory function until needed
+  * Creates the object only once
+  * Improves performance by reducing memory consumption and reducing unnecessary computation
+
 ## 2.1. Using function composition to solve complex problems
 
 *Function composition* - combining of functions in a manner where the output from one function becomes the input for the next function, leading to the creation of a new function
@@ -85,3 +99,92 @@ The book gives an example of a web crawler that takes a URL, finds the title and
 In this scenario, there will inevitably be duplicate URLs and a lot of time would be wasted doing the same calculation repeatedly. Instead, memoization should be leveraged so that duplicate computations are avoided.
 
 You could also utilize the LINQ extension [AsParallel](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.asparallel?view=netframework-4.8) to automatically bind the query to PLINQ.
+
+Issues arise from this however when threads come into play and you are retrieving from a non-thread-safe cache. Instead utilize something like the `ConcurrentDictionary`, which not only allows for the process to be run in parallel but even reduces the amount of code.
+
+## 2.5 Lazy memoization for better performance
+
+Even with the caching, you are still missing some critical performance boosts. If the functions are running in parallel, it may be possible that two or more may try to call for the same URL at the same time; this will result in two calls to the same URL instead of the ideal one. To get around this you can utilize the `Lazy<>` construct to get your results.
+
+``` c#
+Func<T, R> MemoizeLazyThreadSafe<T, R>(Func<T, R> func) where T : IComparable
+{
+    var cache = new ConcurrentDictionary<T, Lazy<R>>();
+
+    return arg => cache.GetOrAdd(arg, a => new Lazy<R>(() => func(a))).Value;
+}
+```
+
+### 2.5.1 Gotchas for function memoization
+
+Storing the cache in a dictionary isn't a good long-term solution; items are not removed and only added. Leading to a potential memory leak issue. 
+
+This can be averted by utilizing the `ConditionalWeakDictionary`, a dictionary where the key is held as a *weak reference* and the values are kept only as long as the key is. The key is subject to garbage collection, thus the data is also subject to garbage collection. 
+
+Another solution is to store a timestamp with your cached objects, and occasionally check for the oldest items and remove them.
+
+You should only perform memoization when the cost of storing the items is less than the cost of calculating them. You should benchmark your process with and without memoization before you commit to the changes.
+
+## 2.6 Effective concurrent speculation to amortize the cost of expensive computations
+
+*Speculative Processing* - Precomputation. Computations are performed before the results are needed, when all the required parameters are available.
+
+*Amortization* - paying off an amount owed over time by making planned, incremental payments of principal and interest.
+
+*Jaro-Winkler distance* - measures the similarity between two strings. The higher the distance the mor similar the strings. Best suited for short strings like names. 0 is no similarity 1 is an exact match
+
+### 2.6.1 Precomputation with natural functional support
+
+F# will allow you to leverage currying and partial application of functions to calculate the value of some underlying data source ahead of time.
+
+### 2.6.2 Let the best computation win
+
+You can also utilize a method that returns the quickest of two potential calculations first.
+
+The book uses the example of a weather app. You could enter a search to retrieve the weather in a particular city, then request two different services make the computation. Whichever service returns first will be the winner and their result will be returned; the other computation will be cancelled. 
+
+## 2.7 Being lazy is a good thing
+
+*Lazy evaluation* is a technique to defer the evaluation of an expression until the last possible moment. When it is accessed. This results in faster programs by preventing excessive computations. 
+
+### 2.7.1 Strict languages for understanding concurrent behaviors
+
+*Eager evaluation*, or *strict evaluation*, is the opposite of lazy evaluation. C# and F# are both strict languages.
+
+**Book Recommendation**: ["Why Functional Programming Matters" by John Hughes](http://mng.bz/qp3B)
+
+Microsoft introduced the `Lazy<T>` construct with Framework 4.0. You define what type of object the `Lazy` is meant to represent then provide it with a value factory; a method of retrieving the value when it is needed.
+
+### 2.7.2 Lazy caching technique and threading-safe Singleton pattern
+
+Because the operations are done on demand and only once, the `Lazy<T>` construct is an ideal mechanism for implementing a Singleton pattern.
+
+[Implementing a Singleton in C#, MSDN](http://mng.bz/pLf4)
+
+*Double-Checked Locking* - design pattern that reduces the overhead of acquiring a lock by first testing the locking criterion without acquiring the lock.
+
+You can pass an optional second parameter into the `Lazy<T>` constructor to force it to e thread-safe. This is enabled by default. No matter how many threads call for the object, they will all receive the same instance, which is cached after the first call.
+
+Keep note, while retrieving the object may be thread safe, it doesn't guarantee that the properties of that object are thread safe as well.
+
+#### LazyInitializer
+
+`LazyInitializer` is an alternative static class like `Lazy<T>`, but with optimized initialization performance and more convenient access.
+
+``` c#
+private Image bigImage;
+
+public Image BigImage => LazyInitializer.EnsureInitialized(ref bigImage, () => new Image());
+```
+
+### 2.7.3 Lazy support in F\#
+
+F# uses the same `Lazy` construct as C# but slightly differently. The result `T` is automatically calculated from the result, and instead of utilizing `.Value`, you use `.Force()` to force the calculation of the object when you need it.
+
+### 2.7.4 Lazy and Task, a powerful combination
+
+You can use `Task` and `Lazy` together to improve your program even further, by returning a `Lazy<Task<T>>`. Then your requested value can be retrieved asynchronously at the time it is needed.
+
+However, with an asynchronous lambda expression, it can be executed on any thread that calls `Value` and the expression will run within the context.
+
+You are better of wrapping the expression in a `Task`, which will force the asynchronous execution on a thread-pool thread.
