@@ -155,7 +155,7 @@ These issues are solved by the next method.
 ### Publish/Subscribe
 
 - *Publishers*
-- *Subscribers* 
+- *Subscribers*
 
 Publishers and subscribers are connected via channels, which are implemented somewhere else hidden from your code. Channels have a name, and a subscriber may register with one or more channels. Publishers write events to channels.
 
@@ -175,3 +175,162 @@ The authors then geek out about streams being "zipped" together.
 
 #### Streams of Events Are Asynchronous Collections
 
+In the scenario where User information is retrieved from an API, they utilize a static list of User IDs. But they note that this doesn't have to be a static list, and that instead they could create a new observable each time a user logs in to the site.
+
+### Events are Ubiquitous
+
+That's pretty much it. They're just very common, and you might not notice it at first.
+
+## 20. Transforming Programming
+
+Programs transform inputs into outputs, but design talks apparently only ever revolve around classes, modules, data structures, algorithms, languages, frameworks etc. They feel that this is not good, that focusing on the I/O of an application instead can lead to clearer code.
+
+**Tip 49:** Programming Is About code, But Programs Are About Data
+
+### Finding Transformations
+
+The "top-down" approach involves taking a requirement and determining its inputs and outputs. 
+
+#### Transformations All the Way Down
+
+Pretty much they're building up to functional languages here using an example with dictionaries and the Elixir functional language.
+
+#### What's with the |> Operator
+
+It's a pipe. Every time you use a pipe should be an opportunity to see data moving between two functions
+
+Apparently there's talk of the pipe coming to JavaScript to really seal in the fact that it's a functional language at this point.
+
+#### Keep on Transforming...
+
+This section just moves to the second step of their example application, still using Elixir.
+
+#### Putting It All Together
+
+Just summarizes the string of functions from the examples previously.
+
+### Why Is This So Great?
+
+**Tip 50:** Don't Hoard State; Pass It Around
+
+By utilizing the functional approach instead of the OO approach, we can get a better degree of decoupling. The data isn't spread everywhere anymore, instead it is in a flow. Here is where they really lay into FP being superior to OO.
+
+I'm finding myself somewhat happy that Lyn and I are reading through Concurrency in .NET at the same time, since it's tackling a lot of the same concepts.
+
+### What About Error Handling?
+
+Instead of passing the raw data, you can wrap the data in a data structure (or type) that can determine whether the data is still valid. **In F# this is the `Option`.**. In general, you can either check for errors inside transformations, or outside them.
+
+#### First, CHoose a Representation
+
+You must create a wrapper that will be used to transfer the data. In the example of Elixir, there is a convention for functions to return a tuple containing OK and the value, or an error and the reason.
+
+#### Then Handle It Inside Each Transformation
+
+Each transformation in their example does a bit of overload matching. In one case, the tuple passed starts with an `:ok` parameter, and the function proceeds as normal. In another case, the tuple begins with `:error` and that message is simply passed through the pipeline in this manner. This puts the burden of error checking on the transformations themselves.
+
+#### Or Handle It in the Pipeline
+
+An issue occurs with the previous error handling implementation in that all the functions are called, and the burden of error checking is put on them. You can move this burden into the pipe by changing the transformation from function *calls* into function *values* that can be called later.
+
+A function that takes a value wrapped in something and applies a function to that value and returns the newly wrapped values is a *bind* function.
+
+### Transformation Transform Programming
+
+Once you develop the habit of thinking of your code as a series of transformation, things become cleaner, designs become flatter, and functions become shorter.
+
+## 31. Inheritance Tax
+
+They start this chapter off by saying that you shouldn't use inheritance in OO. Let's see why
+
+### Some Background
+
+There are two rough types of inheritance
+
+1. A way of combining types (C++, Java)
+2. Organization of behaviors (Ruby, JavaScript)
+
+They then group OO programmers into two categories
+
+1. Don't like typing - use inheritance to add common functionality to a base class
+   - Car and Motorcycle both implement the same `.Model()` method
+2. Don't like types - use inheritance to express relationships between classes
+   - A car is a vehicle
+
+Both kinds apparently have problems.
+
+### Problems Using Inheritance to Share Code
+
+*Inheritance is coupling*. A child class is coupled to it's parent class and all the parents of that parent class. A minor change to a parent class could have a cascade of effects and break a multitude of other classes.
+
+#### Problems Using Inheritance to Build Types
+
+Writing classes as a series of relationships can cause even more issues, especially considering multiple inheritance. A car can be a vehicle, an asset, an insured item, etc. Not all languages provide this type of inheritance, so it's probably best to avoid getting into the habit.
+
+**Tip 51:** Don't Pay Inheritance Tax
+
+### The Alternatives Are Better
+
+They suggest three techniques to avoid using inheritance
+
+- Interfaces and Protocols
+- Delegation
+- Mixins and traits
+
+#### Interfaces and Protocols
+
+Here they mention interfaces as organizational units that create no code, only determine what an inheriting class *must* implement.
+
+Any object that implements a particular interface can be reasoned with as an instance of that interface. A car can be converted into an `IVehicle` and you could stash a list of cars and trucks inside a `List<Vehicle>` and perform operations on the vehicles using the common interface implementations.
+
+**Tip 52:** Prefer Interfaces to Express Polymorphism
+
+#### Delegation
+
+One problem with interfaces are unused methods. You may not need all of the methods that a particular interface requires; this leads to unused code.
+
+**Tip 53:** Delegate to Services: Has-A Trumps Is-A
+
+Whenever possible, move logic out of a class and into a service that is tailor-made to perform that operation. Instead of every class having an implementation of `Save()`, have them all call the same `Repo.Save()` method instead.
+
+#### Mixins, Traits, Categories, Protocol Extensions, ...
+
+All of the names in the title are the same basic idea. We want to extend classes and objects with new functionality without using inheritance.
+
+Create a set of functions, give them a name, and extend a class or object with them and you have a mixin.
+
+**Tip 53:** Use Mixins to Share Functionality
+
+Am I crazy, or is this more coupled code that they were just complaining about? Having classes inherit from a utility class would have the same effect, would it not? This may be something I want to bring up in discussion, because to me it seems they ended on Mixins because they feel it is the solution to all our woes, but somehow I get the sense we're back at square one.
+
+### Inheritance is Rarely the Answer
+
+Use one of the methods listed in the last sections instead.
+
+## 32. COnfiguration
+
+When a value may change after an application goes live, keep that value external. Parameterize your function, that way it can easily adapt how it needs without rewriting.
+
+**Tip 55:** Parameterize Your App Using External Configuration
+
+Anything you know will have to change that you can express outside your code should be moved into configuration.
+
+### Static Configuration
+
+Generally, configuration values are stored either in flat files like JSON or YAML or in a database. However, the book writers would prefer this information be stored in a Service API instead.
+
+### Configuration-As-A-Service
+
+Storing configurations in a service has multiple benefits:
+
+- Sharing of the configuration between multiple applications
+  - Can limit what each application is able to see
+- Changes can be made globally
+- You can utilize a UI to maintain the configuration
+- the data becomes dynamic
+
+They take special note of that last point. The ability to update the configuration of a service without having to restart that service is highly desirable, and the service API approach will better allow that to happen.
+
+### Don't Write Dodo-Code
+
+That's dodo as in the bird, not the poop. Code should be adaptable, because if it can't adapt it won't make it.
