@@ -383,3 +383,5 @@ They take special note of that last point. The ability to update the configurati
 That's dodo as in the bird, not the poop. Code should be adaptable, because if it can't adapt it won't make it.
 
 ## Meeting Notes
+
+With chaining method calls, it's OK to chain if the methods are unlikely to change; this is why chaining LINQ statements are considered OK. The logic inside may change but the `.Where` call will remain consistent.
