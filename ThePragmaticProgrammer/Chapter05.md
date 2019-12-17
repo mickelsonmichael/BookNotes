@@ -1,5 +1,52 @@
 # Bend, Or Break
 
+- [Bend, Or Break](#bend-or-break)
+  - [28. Decoupling](#28-decoupling)
+    - [Law of Demeter](#law-of-demeter)
+      - [Chains and Pipelines](#chains-and-pipelines)
+    - [The Evils of Globalization](#the-evils-of-globalization)
+      - [Global Data Includes Singletons](#global-data-includes-singletons)
+      - [Global Data Includes External Resources](#global-data-includes-external-resources)
+    - [Inheritance Adds Coupling](#inheritance-adds-coupling)
+    - [Again, It's All About Change](#again-its-all-about-change)
+  - [29. Juggling the Real World](#29-juggling-the-real-world)
+    - [Events](#events)
+    - [Finite State Machines](#finite-state-machines)
+      - [The Anatomy of a Pragmatic FSM (Finite State Machine)](#the-anatomy-of-a-pragmatic-fsm-finite-state-machine)
+      - [Adding Actions](#adding-actions)
+      - [State Machines Are a Start](#state-machines-are-a-start)
+    - [The Observer Pattern](#the-observer-pattern)
+    - [Publish/Subscribe](#publishsubscribe)
+    - [Reactive Programming, Streams, and Events](#reactive-programming-streams-and-events)
+      - [Streams of Events Are Asynchronous Collections](#streams-of-events-are-asynchronous-collections)
+    - [Events are Ubiquitous](#events-are-ubiquitous)
+  - [20. Transforming Programming](#20-transforming-programming)
+    - [Finding Transformations](#finding-transformations)
+      - [Transformations All the Way Down](#transformations-all-the-way-down)
+      - [What's with the |&gt; Operator](#whats-with-the-gt-operator)
+      - [Keep on Transforming...](#keep-on-transforming)
+      - [Putting It All Together](#putting-it-all-together)
+    - [Why Is This So Great?](#why-is-this-so-great)
+    - [What About Error Handling?](#what-about-error-handling)
+      - [First, CHoose a Representation](#first-choose-a-representation)
+      - [Then Handle It Inside Each Transformation](#then-handle-it-inside-each-transformation)
+      - [Or Handle It in the Pipeline](#or-handle-it-in-the-pipeline)
+    - [Transformation Transform Programming](#transformation-transform-programming)
+  - [31. Inheritance Tax](#31-inheritance-tax)
+    - [Some Background](#some-background)
+    - [Problems Using Inheritance to Share Code](#problems-using-inheritance-to-share-code)
+      - [Problems Using Inheritance to Build Types](#problems-using-inheritance-to-build-types)
+    - [The Alternatives Are Better](#the-alternatives-are-better)
+      - [Interfaces and Protocols](#interfaces-and-protocols)
+      - [Delegation](#delegation)
+      - [Mixins, Traits, Categories, Protocol Extensions, ...](#mixins-traits-categories-protocol-extensions-)
+    - [Inheritance is Rarely the Answer](#inheritance-is-rarely-the-answer)
+  - [32. COnfiguration](#32-configuration)
+    - [Static Configuration](#static-configuration)
+    - [Configuration-As-A-Service](#configuration-as-a-service)
+    - [Don't Write Dodo-Code](#dont-write-dodo-code)
+  - [Meeting Notes](#meeting-notes)
+
 ## 28. Decoupling
 
 **Tip 44:** Decoupled Code Is Easier to Change
@@ -334,3 +381,5 @@ They take special note of that last point. The ability to update the configurati
 ### Don't Write Dodo-Code
 
 That's dodo as in the bird, not the poop. Code should be adaptable, because if it can't adapt it won't make it.
+
+## Meeting Notes
