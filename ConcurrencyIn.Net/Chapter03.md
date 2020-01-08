@@ -44,3 +44,58 @@ This immutability comes at a cost however, and if you want to get truly performa
 #### .NET concurrent collections: a faster solution
 
 Utilizing a `ConcurrentDictionary` in the scenario above is the better option if you want more speed.
+
+**NOTE: MISSING NOTES HERE**
+
+### 3.3.6 Building a persistent data structure: an immutable binary tree
+
+This section reviews building a binary tree, or B-Tree, in F# with recursion. Tree structures prevent cycles and are used for performance. The .NET Framework never shipped with a tree collection, however. A binary tree is a tree where each node has between zero and two branches and the height of the tree between any leaves is at most one.
+
+**Depth of a Node:** the number of edges from the node to the root node
+
+**Leaf:** a node with no children
+
+**Siblings:** children of the same parent
+
+**Root:** the only node in a tree with no parent; can also be a leaf if there is only one object in the tree
+
+#### B-Trees in Functional F\#
+
+Binary trees are easily represented in F# because of the presence of ADTs and discriminated unions (DUs). F# also seems to provide a `Node` type for this as well. [See the MDSN documentation for more information](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/discriminated-unions#using-discriminated-unions-for-tree-data-structures).
+
+## 3.4 Recursive functions: a natural way to iterate
+
+In functional programming, each iteration passes a new copy of the value due to the immutable nature of FP. This concept is the basis of the *Divide and Conquer* pattern, which involves breaking a problem down into sub-problems that can be solved individually and then brought together for the final solution. This pattern also leads to *dynamic task parallelism* where tasks are added as the iterations advance.
+
+Recursion can lead to slow computations and `StackOverflowException`, but you can utilize the strategies of *tail recursion* and *CPS* to minimize this risk.
+
+### 3.4.1 The tail of a correct recursive function: tail-call optimization
+
+**Tail Call:** also known as *tail-call optimization (TCO)* is the call performed as the last act of a procedure. This improves efficiency because the callee uses the same stack space as the caller.
+
+**Tail Recursive:** when a tail-call calls the same subroutine again
+
+**Tail-Call Recursion:** converts a recursive function into an optimized version; the last call of the function is a call to itself
+
+Unfortunately, the **C# compiler doesn't currently do the optimization necessary for the tail-call**, and there will be no real gain in writing code this way.
+
+### 3.4.2 Continuation passing style to optimize recursive function
+
+Since C# cannot use tail-call optimizations, we can instead implement CPS, where the result of a function is passed into a continuation, which avoids stack allocation. This method is used in the `async-await` TPL in C#. See the example below for a non-recrusive CPS.
+
+```c#
+public static void GetMaxCPS(int x, int y, Action<int> action)
+{
+    var val = x > y ? x : y;
+    action(val);
+}
+
+public static void Main(string[] args)
+{
+    GetMaxCPS(5, 7, n => Console.WriteLine(n));
+}
+```
+
+Note that the function `GetMaxCPS` doesn't do anything with the result itself, but merely passes it on to the delegate `action`. It passes the value to the "continuation procedure."
+
+#### Recursive Functions with CPS
