@@ -23,7 +23,7 @@
   - [20. Transforming Programming](#20-transforming-programming)
     - [Finding Transformations](#finding-transformations)
       - [Transformations All the Way Down](#transformations-all-the-way-down)
-      - [What's with the |&gt; Operator](#whats-with-the-gt-operator)
+      - [What's with the |> Operator](#whats-with-the--operator)
       - [Keep on Transforming...](#keep-on-transforming)
       - [Putting It All Together](#putting-it-all-together)
     - [Why Is This So Great?](#why-is-this-so-great)
