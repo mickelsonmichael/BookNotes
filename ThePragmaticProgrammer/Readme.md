@@ -1,21 +1,18 @@
-The Pragmatic Programmer
-===
-20th Anniversary Edition
-Your Journey to Master
+# The Pragmatic Programmer
+
+**20th Anniversary Edition  
+Your Journey to Mastery**  
 by David Thomas and Andrew Hunt
 
-:moneybag: [Purchase from Publisher (PDF Only)](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition)
-:moneybag: [Amazon](https://smile.amazon.com/Pragmatic-Programmer-journey-mastery-Anniversary/dp/0135957052)
- 
- 
- # Reading Schedule
- 
- 
+- :moneybag: [Purchase from Publisher (PDF Only)](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition)
+- :moneybag: [Amazon](https://smile.amazon.com/Pragmatic-Programmer-journey-mastery-Anniversary/dp/0135957052)
+
+## Reading Schedule
 
 | Week | Due Date | Chapter |
 | --- | -------- | ------|
 | 1 | Nov. 19 | [1: A Pragmatic Philosophy](Chapter01.md) |
-| 2 | Nov. 26 | [2: A Pragmatic Approach](Chapter02.md) 
+| 2 | Nov. 26 | [2: A Pragmatic Approach](Chapter02.md) |
 | 3 | Dec. 3 | [3: The Basic Tools](Chapter03.md)  |
 | 4 | Dec. 10 | [4: Pragmatic Paranoia](Chapter04.md)  |
 | 5 | Dec. 17 | [5: Bend, or Break](Chapter05.md)  |
