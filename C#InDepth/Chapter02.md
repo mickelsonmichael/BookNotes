@@ -2,6 +2,8 @@
 
 ## 2.1 Generics
 
+[Blog Post by Eric Lippert on covariance and contravariance](http://mng.bz/gYPv). This links to just part two of eight, and it may not be necessary to read them all.
+
 When using type constraints for generics (`where T : constraint`), you can use multiple different constraints.
 
 - Reference type constraint
@@ -71,3 +73,19 @@ int result = first ?? second; // ok
 The purpose of a delegate is to "encapsulate a piece of code so that it can be passed around and executed as necessary in a type-safe fashion in terms of the return type and parameters."
 
 A method group is a group of methods with the same name but different parameters.
+
+## 2.4 Iterators
+
+The use of the `yield` keyword is ideal because it allows for lazy-execution. You can break out of a loop/iteration and stop the execution of the rest of the function since each `yield` is calculated one at a time with each loop. The program remembers the last `yield` it touched and continues form the point where it left off each time.
+
+When breaking out of an iteration function with a try...finally block, once you break out of the execution (because some condition is met to stop iteration), then the finally block is automatically called, even if breaking before iterating through all the options. This is because a `foreach` loop is essentially wrapped in a `using` statement, which automatically runs the `finally`.
+
+## Meeting \#1 (January 23, 2020)
+
+Lyn and I both didn't finish this chapter, so we've decided to break it down into two parts. We probably will also do this for the main Book Club as well, since this chapter is quite a bit to absorb.
+
+She figures we could go to 2.3, but I think we should make it to 2.4 since 2.3 is on Delegates, which is more of an FYI in my opinion, since most of it is superseded by lambdas.
+
+We were talking briefly about partial classes and how we could use them win the www project to break up the Accord.cs file. That way it's multiple files but it would be compiled into one large class.
+
+We think a lot of the older stuff is just fun to know but not very useful, like `StringCollection` and delegates.
