@@ -89,3 +89,13 @@ She figures we could go to 2.3, but I think we should make it to 2.4 since 2.3 i
 We were talking briefly about partial classes and how we could use them win the www project to break up the Accord.cs file. That way it's multiple files but it would be compiled into one large class.
 
 We think a lot of the older stuff is just fun to know but not very useful, like `StringCollection` and delegates.
+
+## Meeting 2/4/2019
+
+Sounds like everyone is on board for doing a short presentation for each of the sections (Dan wasn't here but I think he's overruled). See below for the breakdown. It's uncertain whether or not we're doing all of chapter 2 or not, however. Right now it's a tentative plan to read the entire thing, but we'll do a check-in on Monday or perhaps later this week to see how people are feeling about it, and go from there.
+
+- Brian - Generics (2.1)
+- Kal - Nullable value (2.2)
+- Dan - Delegate creation (2.3)
+- Kent - Iterators (2.4)
+- Mike - Minor Features (2.5)
