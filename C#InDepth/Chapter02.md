@@ -99,3 +99,49 @@ Sounds like everyone is on board for doing a short presentation for each of the 
 - Dan - Delegate creation (2.3)
 - Kent - Iterators (2.4)
 - Mike - Minor Features (2.5)
+
+## Meeting 2/11/2019
+
+Kal and Dan didn't quite finish Iterators and Minor Features, so we will pick back up next week.
+
+### Kal - Nullable Value Types (2.2)
+
+- Nullable value types are more of a indicator of absence.
+- It is a pre-compilation check on whether or not a value is null.
+- The `Nullable<T>` type can accept any `T` except a `Nullable<T>` (cannot perform nesting).
+- There is an implicit conversion from `Nullable<T>` to `T`.
+- The basic structure is a `struct` with a `Value` and `HasValue` property.
+- Language support
+  - `?` suffix instead of `Nullable<T>`
+  - Null literal
+- Lifting and lifted operators
+  - True/false are never lifted
+  - We also discussed the fact that `null == null = true` while `null <= null = false` which is unusual
+
+### Brian - Generics (2.1)
+
+- Long section with a lot of information; very dense
+- Bit of a history lesson as well, talking about arrays and different challenges there used to be with collections
+- Uses examples like ArrayList and StringCollection
+- Compiles to a type and can utilize intellisense
+- One place we can be using this is in a generic Repository
+- He highlighted the fact that "the ability to use a type parameter to express a relationship between the types of regular parameters and the return type is a huge part of the power of generics."
+- Arity is the number of generic parameters there are
+- There are restrictions on what can be used with generics and what can't be
+- Constraints can restrict the types a generic can be
+- Two constructed types from the same declaration result in two different classes
+  - A `List<int>` is a different class than `List<string>`
+
+### Dan - Delegates (2.3)
+
+- Focus of the section was to show the evolution of delegates
+- In C# 1 you needed to be very specific about your delegate creation
+- In C# 2, it became more implied with method group conversions
+  - It can take methods with similar signatures and make the conversion from one to another
+  - Instead of having to explicitly use `new EventHandler` you can just pass the method directly
+- Lots of us saw delegates first used with OnClick Event Handlers
+- LoanQuest you need to use `+=` all the time to add event listeners
+- Anonymous method allowed you to write inline methods for your delegates when you were assigning them, so you don't have to write the whole thing
+- Delegate compatibility was a way to do implicit casting between your parameters
+  - As long as there is an implicit cast between parameters, there is an implicit cast between delegates
+  - However, there has to be an identity conversion; the compiler will not allow for data loss to occur (like a `long` to an `int`)
