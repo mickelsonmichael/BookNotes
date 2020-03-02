@@ -7,3 +7,4 @@ I aim to at least be reading two chapters of some book every week (an hour a nig
 * [The Pragmatic Programmer](/ThePragmaticProgrammer/Readme.md)
 * [ASP.NET Core in Action](/Asp.NetCoreInAction/Readme.md)
 * [Concurrency in .NET](/ConcurrencyIn.Net/README.md)
+* [C# in Depth](/C#InDepth/README.md)
