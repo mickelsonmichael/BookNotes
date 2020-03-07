@@ -93,3 +93,14 @@
 - When testing, you can use `Task.FromResult`, `Task.FromException`, and `Task.FromCanceled` to return expected values
 - You can also use `TaskCopletionSource<TResult>` for more in-depth scenarios
   - Allows you to create an ongoing task then you can set the value for later to mark as completed
+
+## Blog Post - *Understanding the Whys, Whats, and Whens of ValueTask*
+
+[.NET Blog Post](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/?WT.mc_id=ondotnet-c9-cxa)
+
+- `Task` is essentially a promise; you initiate a `Task` and can wait for the operation to complete.
+  - Synchronysly: value is available when you use it; data was already available
+  - Asynchronously but complete: value wasn't available, but the `Task` was completed before you used the value
+  - Asynchronously but incomplete: value wasn't available and you must wait for the `Task` to complete
+- Using the `await` keyword makes it easy to generate a callback once the `Task` is completed. The compiler does all the work and optimization for you
+- Because `Task` is a class, it comes with the downsides of allocation; you must allocate memory on the heap and force the GC to free the resources instead of freeing other things
