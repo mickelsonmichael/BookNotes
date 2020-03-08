@@ -98,9 +98,129 @@
 
 [.NET Blog Post](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/?WT.mc_id=ondotnet-c9-cxa)
 
+## Task
+
 - `Task` is essentially a promise; you initiate a `Task` and can wait for the operation to complete.
   - Synchronysly: value is available when you use it; data was already available
   - Asynchronously but complete: value wasn't available, but the `Task` was completed before you used the value
   - Asynchronously but incomplete: value wasn't available and you must wait for the `Task` to complete
 - Using the `await` keyword makes it easy to generate a callback once the `Task` is completed. The compiler does all the work and optimization for you
 - Because `Task` is a class, it comes with the downsides of allocation; you must allocate memory on the heap and force the GC to free the resources instead of freeing other things
+- In the case of `Task<bool>` therea are only two possible return values, so the compiler is able to optimize and cache the code
+  - If the operation completes before the `Task` is awaited, the compiler can simply return the value
+  - If the operation *does not complete before the `Task` is awaited*, the compiler will still need to create a new instance of the `Task` that the calling code can use
+- The compiler also caches some return values for other types like `Task<int>`, but it's not practical to cache every potential value
+  - Some libraries like `MemoryStream.ReadAsync` do the caching themselves to optimize the code
+  
+### `ValueTask<TResult>` and asynchronous completion
+
+- `ValueTask` was introduced to reduce the memory allocation downsides to `Task` on certain paths
+- A new interface was also introduced in .NET 2.1, `IValueTaskSource`
+  - `ValueTask` was updated to wrap that interface as well
+  - Provides async operations to `ValueTask` like `Task` does
+
+```c#
+public interface IValueTaskSource<out TResult>
+{
+    ValueTaskSourceStatus GetStatus(short token);
+    void OnCompleted(Action<object> continuation, object state, short token, ValueTaskSourceOnCompletedFlags flags);
+    TResult GetResult(short token);
+}
+```
+
+- Most developers will not have to bother with the interface, only those interested in high performance APIs will
+- If an operation completes synchronously, then it can simply return the `ValueTask<TResult>`
+- If an operation complete *asynchronously*, then the process can use a pooled `IValueTaskSource<TResult>`
+  - e.g. the `Socket` implementation has one pooled for Sends, and one pooled for Receieves
+    - As long as there is only one send and one recieve happening at a time, no more resources need to be allocated, **even if they complete asynchronously**
+
+### Non-Generic `ValueTask`
+
+- Because of the introduction of `IValueTaskSource` in 2.1, the need to have a non-generic version of `ValueTask` became necessary since asynchronous operations could now be allocation-free
+
+### Implementing `IValueTaskSource`/`IValueTaskSource<T>`
+
+- Not easy to implement, but thankfully most devs won't need to
+- Plans to simply this process using `ManualResetValueTaskSourceCore<TResult>` in .NET Core 3.0
+
+### Valid Consumption Patterns for `ValueTask`s
+
+- Never do the following when working with `ValueTask`
+  1. **Await a `ValueTask`/`ValueTask<T>` multiple times**
+      - Underlying object may have been recycled already
+  2. **Await a `ValueTask`/`ValueTask<T>` concurrently**
+      - Underlying object expects only one callback for one consumer
+      - Could introduce race conditions
+      - More specific case of (1)
+  3. **Use `GetAwaiter().GetResult()` before the operation has completed**
+      - `ValueTask` doesn't support blocking, so it will result in race conditions
+- If you need to perform one of these, then use the `AsTask` method on the `ValueTask`
+  - Never operate on this `Task` again
+- **Shorthand Rule**: You should either await a `ValueTask` directly or call `AsTask()` and only use it once
+- You can avoid violating the rules by utilizing the `IsCompleted` and `IsCompletedSuccessfully` properties of the `ValueTask`
+
+#### OK `ValueTask` Usage
+
+```c#
+// GOOD
+int result = await SomeValueTaskReturningMethodAsync();
+
+// GOOD
+int result = await SomeValueTaskReturningMethodAsync().ConfigureAwait(false);
+
+// GOOD
+Task<int> t = SomeValueTaskReturningMethodAsync().AsTask();
+```
+
+#### Warning `ValueTask` Usage
+
+```c#
+// WARNING
+ValueTask<int> vt = SomeValueTaskReturningMethodAsync();
+```
+
+In this scenario, storing the `ValueTask` in a variable makes it more likely that it will be abused. Otherwise it is OK.
+
+#### Bad `ValueTask` Usage
+
+Example below awaits the `ValueTask` multiple times, violating rule (1) above
+
+```c#
+// BAD: awaits multiple times
+ValueTask<int> vt = SomeValueTaskReturningMethodAsync();
+int result = await vt;
+int result2 = await vt;
+```
+
+This example awaits the result concurrently (and multiple times), violating both rules (1) and (2) above.
+
+```c#
+// BAD: awaits concurrently (and, by definition then, multiple times)
+ValueTask<int> vt = SomeValueTaskReturningMethodAsync();
+Task.Run(async () => await vt);
+Task.Run(async () => await vt);
+```
+
+Does not check the status of the task before calling the `GetAwaiter().GetResult()` methods, which may lead to the task not being completed.
+
+```c#
+// BAD: uses GetAwaiter().GetResult() when it's not known to be done
+ValueTask<int> vt = SomeValueTaskReturningMethodAsync();
+int result = vt.GetAwaiter().GetResult();
+```
+
+### Should every new asynchronous API return `ValueTask` / `ValueTask<TResult>`
+
+- No.
+- `Task` and `Task<TResult>` are easier to use properly without abuse
+- There are still costs with returning `ValueTask`
+- It's actually faster to await a `ValueTask` rather than a `Task`
+  - In scenarios where you return `void` or `bool` you're probaby better off using `Task` since caching can be leveraged
+- They are the better choice when:
+  1. Consumers will await your API immediately
+  2. You want to avoid allocation overhead
+  3. You expect synchronous completion to be common
+
+### What's next for `ValueTask` and `ValueTask<TResult>`
+
+- `IAsyncEnumerator<T>`'s `MoveNextAsync` will instead return a `ValueTask<bool>` instead of a `Task<bool>`
